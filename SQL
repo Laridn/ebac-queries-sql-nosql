@@ -1,1 +1,68 @@
+Exercício 1:
 
+- 1º: Faça uma consulta que retorne a lista de filmes e suas categorias correspondentes:
+
+SELECT film_category.category_id, film.title FROM film_category
+INNER JOIN  film
+ON film_category.film_id=film.film_id
+
+- 2º: Faça uma consulta que retorne a lista de todos os atores com o número filmes que cada ator participou. Ordene a lista pelo numero de filmes, iniciando pelos atores que mais atuaram:
+
+SELECT actor.actor_id,
+CONCAT(actor.first_name, ' ', actor.last_name) AS Ator,
+COUNT(film_actor.film_id) AS FilmesAtuados
+FROM actor
+INNER JOIN film_actor ON actor.actor_id = film_actor.actor_id
+GROUP BY actor.actor_id
+ORDER BY FilmesAtuados DESC;
+
+- 3º: Faça uma consulta que retorne a lista de atores que atuaram em filmes com mais de duas horas de duração (120min). Ordene a lista pelo numero de filmes que cada ator participou:
+
+SELECT
+CONCAT(actor.first_name, ' ', actor.last_name) AS NomeAtor,
+COUNT(film_actor.film_id) AS FilmesAtuados
+FROM actor
+INNER JOIN film_actor ON actor.actor_id = film_actor.actor_id
+INNER JOIN film ON film_actor.film_id = film.film_id
+WHERE film.length > 120
+GROUP BY actor.actor_id
+ORDER BY FilmesAtuados ASC;
+
+Exercício 2:
+
+- Crie uma consulta para cada consulta do exercício anterior que retorne o numero de registros encontrados pela busca
+
+1º: 
+SELECT COUNT(*) AS numero_de_registros
+FROM (
+SELECT film_category.category_id, film.title
+FROM film_category
+INNER JOIN film ON film_category.film_id = film.film_id
+) AS subquery;
+
+
+2º: 
+SELECT COUNT(*) AS numero_de_registros
+FROM (
+SELECT actor.actor_id,
+CONCAT(actor.first_name, ' ', actor.last_name) AS Ator,
+COUNT(film_actor.film_id) AS FilmesAtuados
+FROM actor
+INNER JOIN film_actor ON actor.actor_id = film_actor.actor_id
+GROUP BY actor.actor_id
+ORDER BY FilmesAtuados DESC
+) AS subquery;
+
+
+3º: 
+SELECT COUNT(*) AS numero_de_registros
+FROM (
+SELECT CONCAT(actor.first_name, ' ', actor.last_name) AS NomeAtor,
+COUNT(film_actor.film_id) AS FilmesAtuados
+FROM actor
+INNER JOIN film_actor ON actor.actor_id = film_actor.actor_id
+INNER JOIN film ON film_actor.film_id = film.film_id
+WHERE film.length > 120
+GROUP BY actor.actor_id
+ORDER BY FilmesAtuados ASC
+) AS subquery;
